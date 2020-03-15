@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "./node_modules/.bin/web-ext run -s src/"
+    "start": "./node_modules/.bin/web-ext run -s src/",
+    "lint": "./node_modules/.bin/web-ext lint -s src/",
+    "build": "./node_modules/.bin/web-ext build -s src/ -a dist/"
   },
   "devDependencies": {
     "@types/firefox-webext-browser": "^70.0.1",
