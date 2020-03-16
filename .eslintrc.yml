@@ -6,3 +6,9 @@ plugins:
 extends:
   - eslint:recommended
   - plugin:no-unsanitized/DOM
+rules:
+  comma-dangle:
+    - warn
+    - always-multiline
+  no-trailing-spaces: warn
+  semi: warn
