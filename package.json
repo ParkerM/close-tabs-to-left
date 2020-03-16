@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "./node_modules/.bin/web-ext run -s src/",
-    "lint": "./node_modules/.bin/web-ext lint -s src/",
+    "lint:web-ext": "./node_modules/.bin/web-ext lint -s src/",
+    "lint:eslint": "./node_modules/.bin/eslint src/**/*.js",
     "build": "./node_modules/.bin/web-ext build -s src/ -a dist/"
   },
   "devDependencies": {
