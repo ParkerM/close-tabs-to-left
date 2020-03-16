@@ -3,6 +3,10 @@
   "name": "close-tabs-to-left",
   "description": "Adds \"Close Tabs to the Left\" context menu entry",
   "homepage_url": "https://github.com/ParkerM/close-tabs-to-left",
+  "developer": {
+    "name": "Parker Mauney",
+    "url": "https://github.com/ParkerM/close-tabs-to-left"
+  },
   "version": "0.0.1",
   "browser_specific_settings": {
     "gecko": {
