@@ -1,15 +1,21 @@
 {
   "manifest_version": 2,
-  "name": "close-tabs-to-left",
-  "description": "Adds \"Close Tabs to the Left\" context menu entry",
+  "name": "Close Tabs to the Left",
+  "short_name": "Close Left",
+  "description": "Adds \"Close Tabs to the Left\" button on tab right-click menus.",
+  "version": "0.0.1",
   "homepage_url": "https://github.com/ParkerM/close-tabs-to-left",
   "developer": {
     "name": "Parker Mauney",
     "url": "https://github.com/ParkerM/close-tabs-to-left"
   },
-  "version": "0.0.1",
+  "icons": {
+    "48": "icon.png",
+    "96": "icon@2x.png"
+  },
   "browser_specific_settings": {
     "gecko": {
+      "id": "closetabstotheleft@parkerm.github.io",
       "strict_min_version": "58.0a1"
     }
   },

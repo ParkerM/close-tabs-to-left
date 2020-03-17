@@ -1,6 +1,6 @@
 function onCreated() {
   if (browser.runtime.lastError) {
-    browser.console.error(`Error: ${browser.runtime.lastError}`);
+    this.console.error(`Error: ${browser.runtime.lastError}`);
   } else {
     this.console.debug("Item created successfully");
   }
