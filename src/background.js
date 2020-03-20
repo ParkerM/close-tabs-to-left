@@ -6,6 +6,9 @@ function onCreated() {
   }
 }
 
+/**
+ * @param {number} tabIdx
+ */
 function closeTabsWithIdxLessThan(tabIdx) {
   for (let i = 0; i < tabIdx; i++) {
     browser.tabs.query({index: i, currentWindow: true})
@@ -13,6 +16,10 @@ function closeTabsWithIdxLessThan(tabIdx) {
   }
 }
 
+/**
+ * @param {browser.menus.OnClickData} info
+ * @param {browser.tabs.Tab} tab
+ */
 function closeTabsToLeft(info, tab) {
   closeTabsWithIdxLessThan(tab.index);
 }
