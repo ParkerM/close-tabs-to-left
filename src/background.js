@@ -7,21 +7,13 @@ function onCreated() {
 }
 
 /**
- * @param {number} tabIdx
- */
-function closeTabsWithIdxLessThan(tabIdx) {
-  for (let i = 0; i < tabIdx; i++) {
-    browser.tabs.query({index: i, currentWindow: true})
-        .then(tabs => browser.tabs.remove(tabs[0].id));
-  }
-}
-
-/**
  * @param {browser.menus.OnClickData} info
- * @param {browser.tabs.Tab} tab
+ * @param {browser.tabs.Tab} target
  */
-function closeTabsToLeft(info, tab) {
-  closeTabsWithIdxLessThan(tab.index);
+function closeTabsToLeft(info, target) {
+  return browser.tabs.query({currentWindow: true})
+      .then(tabs => tabs.filter(tab => tab.index < target.index).map(toId))
+      .then(browser.tabs.remove);
 }
 
 browser.menus.create({
@@ -31,3 +23,8 @@ browser.menus.create({
   title: "Close Tabs to the Left",
   onclick: closeTabsToLeft,
 }, onCreated);
+
+/*
+ * Lil helpers
+ */
+const toId = (item) => item.id;
