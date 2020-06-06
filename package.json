@@ -8,7 +8,7 @@
   "scripts": {
     "start": "web-ext run -s src/",
     "lint:web-ext": "web-ext lint -s src/",
-    "lint:eslint": "eslint src/**/*.js",
+    "lint:eslint": "eslint src/**/*.{js,ts}",
     "test": "jest",
     "build": "web-ext build -s src/ -a dist/"
   },
@@ -18,12 +18,17 @@
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
     "awesome-typescript-loader": "^5.2.1",
     "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-no-unsanitized": "^3.1.1",
+    "eslint-plugin-prettier": "^3.1.3",
     "jest": "^25.4.0",
     "mockzilla": "^0.7.1",
     "mockzilla-webextension": "^0.6.0",
+    "prettier": "^2.0.5",
     "ts-jest": "^25.5.1",
     "typescript": "^3.9.3",
     "web-ext": "^4.2.0",

@@ -2,11 +2,14 @@ env:
   es6: true
   commonjs: true
   webextensions: true
+parser: "@typescript-eslint/parser"
 plugins:
   - no-unsanitized
 extends:
-  - eslint:recommended
   - plugin:no-unsanitized/DOM
+  - plugin:@typescript-eslint/recommended
+  - prettier/@typescript-eslint
+  - plugin:prettier/recommended
 rules:
   comma-dangle:
     - warn
