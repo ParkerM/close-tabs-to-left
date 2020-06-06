@@ -16,3 +16,4 @@ rules:
     - always-multiline
   no-trailing-spaces: warn
   semi: warn
+  "@typescript-eslint/no-non-null-assertion": off
