@@ -31,5 +31,5 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
 
-      - name: Mocha tests
-        run: yarn test
+      - name: Jest tests
+        run: yarn run test:coverage

@@ -1,31 +1,48 @@
 {
   "name": "close-tabs-to-left",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
   "repository": "github:ParkerM/close-tabs-to-left",
   "bugs": "https://github.com/ParkerM/close-tabs-to-left/issues",
   "scripts": {
-    "start": "web-ext run -s src/",
-    "lint:web-ext": "web-ext lint -s src/",
-    "lint:eslint": "eslint src/**/*.js",
-    "test": "mocha test/",
-    "build": "web-ext build -s src/ -a dist/"
+    "start": "web-ext run",
+    "lint:web-ext": "yarn run build-release && web-ext lint -i src coverage *.json *.lock \"dist/*.map\"  -i !manifest.json",
+    "lint:eslint": "eslint src/**/*.{js,ts}",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "build": "webpack --mode=development",
+    "build-release": "webpack --mode=production",
+    "pack": "web-ext build -i src coverage *.json *.lock \"*.js\" \"dist/*.map\" -i !manifest.json",
+    "release": "yarn run build-release && yarn run pack"
   },
   "engines": {
     "node": ">=12.x",
     "yarn": "^1.x"
   },
+  "private": true,
   "devDependencies": {
-    "@types/firefox-webext-browser": "^70.0.1",
-    "chai": "^4.2.0",
+    "@types/jest": "^25.2.3",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "awesome-typescript-loader": "^5.2.1",
+    "clean-webpack-plugin": "^3.0.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-no-unsanitized": "^3.0.2",
-    "mocha": "^7.1.1",
-    "nyc": "^15.0.0",
-    "sinon": "^9.0.1",
-    "sinon-chai": "^3.5.0",
-    "web-ext": "^4.1.0",
-    "webextensions-jsdom": "^1.4.1"
-  }
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-no-unsanitized": "^3.1.1",
+    "eslint-plugin-prettier": "^3.1.3",
+    "jest": "^25.4.0",
+    "mockzilla": "^0.7.1",
+    "mockzilla-webextension": "^0.6.0",
+    "prettier": "^2.0.5",
+    "source-map-loader": "^1.0.0",
+    "source-map-support": "^0.5.19",
+    "ts-jest": "^25.5.1",
+    "typescript": "^3.9.3",
+    "web-ext": "^4.2.0",
+    "webextension-polyfill-ts": "^0.17.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {}
 }
