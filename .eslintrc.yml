@@ -1,5 +1,6 @@
 env:
   es6: true
+  commonjs: true
   webextensions: true
 plugins:
   - no-unsanitized
