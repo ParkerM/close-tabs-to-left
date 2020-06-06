@@ -6,14 +6,14 @@
   "repository": "github:ParkerM/close-tabs-to-left",
   "bugs": "https://github.com/ParkerM/close-tabs-to-left/issues",
   "scripts": {
-    "start": "web-ext run -s dist/",
-    "lint:web-ext": "web-ext lint -s dist/",
+    "start": "web-ext run",
+    "lint:web-ext": "yarn run build-release && web-ext lint -i src coverage *.json *.lock \"dist/*.map\"  -i !manifest.json",
     "lint:eslint": "eslint src/**/*.{js,ts}",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "build": "webpack --mode=development",
     "build-release": "webpack --mode=production",
-    "pack": "web-ext build -i src test coverage *.json \"*.js\" \"dist/*.map\" -i !manifest.json",
+    "pack": "web-ext build -i src coverage *.json *.lock \"*.js\" \"dist/*.map\" -i !manifest.json",
     "release": "yarn run build-release && yarn run pack"
   },
   "engines": {
