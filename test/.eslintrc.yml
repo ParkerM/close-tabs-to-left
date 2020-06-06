@@ -1,6 +1,0 @@
-env:
-  commonjs: true
-  mocha: true
-  node: true
-parserOptions:
-  ecmaVersion: 2018
