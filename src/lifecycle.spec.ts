@@ -1,4 +1,5 @@
 import {Lifecycle} from './lifecycle';
+import {Listeners} from './listeners';
 
 describe('Lifecycle', () => {
   let lifecycle: Lifecycle;
@@ -12,21 +13,27 @@ describe('Lifecycle', () => {
       const onclickFn = jest.fn();
       const expectedCreateCb = lifecycle.onCreated;
 
-      mockBrowser.menus.create
-        .expect(
-          {
-            id: 'tab-close-to-left',
-            type: 'normal',
-            contexts: ['tab'],
-            title: 'Close Tabs to the Left',
-            onclick: onclickFn,
-          },
-          expectedCreateCb,
-        )
-        .andReturn(42);
+      mockBrowser.menus.create.expect(
+        {
+          id: 'tab-close-to-left',
+          type: 'normal',
+          contexts: ['tab'],
+          title: 'Close Tabs to the Left',
+          onclick: onclickFn,
+        },
+        expectedCreateCb,
+      );
 
-      const initStatus = lifecycle.init(onclickFn);
-      expect(initStatus).toEqual(42);
+      lifecycle.init(onclickFn);
+    });
+  });
+
+  describe('onCreated', () => {
+    it('should add onShown and onHidden menu listeners', () => {
+      mockBrowser.menus.onShown.addListener.expect(Listeners.updateEnabledState);
+      mockBrowser.menus.onHidden.addListener.expect(Listeners.resetMenuInstanceState);
+
+      lifecycle.onCreated();
     });
   });
 });
