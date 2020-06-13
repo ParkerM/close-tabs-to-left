@@ -3,7 +3,7 @@ import {MENU_ITEM_ID, minimizingIndex, toId} from './util';
 import OnShownInfoType = Menus.OnShownInfoType;
 import Tab = Tabs.Tab;
 
-export class Listeners {
+export abstract class Listeners {
   static lastMenuInstanceId = 0;
   static nextMenuInstanceId = 1;
 
