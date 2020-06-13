@@ -51,7 +51,7 @@ describe('Listeners', () => {
     });
   });
 
-  describe('updateEnabledState', () => {
+  describe('Button enabled listener', () => {
     let menuUpdateSpy: (id: string | number, updateProperties: Menus.UpdateUpdatePropertiesType) => Promise<void>;
     let menuRefreshSpy: () => Promise<void>;
     let tabQuerySpy: (queryInfo: Tabs.QueryQueryInfoType) => Promise<Tabs.Tab[]>;
@@ -86,6 +86,15 @@ describe('Listeners', () => {
       await Listeners.updateEnabledState(dummyOnShownInfoType, undefined);
 
       expect(tabQuerySpy).not.toHaveBeenCalled();
+      expect(menuUpdateSpy).not.toHaveBeenCalled();
+      expect(menuRefreshSpy).not.toHaveBeenCalled();
+    });
+
+    it('should noop if menu instance is reset during async query', async () => {
+      Listeners.updateEnabledState(dummyOnShownInfoType, tab2);
+      await Listeners.resetMenuInstanceState();
+
+      expect(tabQuerySpy).toHaveBeenCalledWith({currentWindow: true});
       expect(menuUpdateSpy).not.toHaveBeenCalled();
       expect(menuRefreshSpy).not.toHaveBeenCalled();
     });

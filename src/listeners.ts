@@ -4,8 +4,8 @@ import OnShownInfoType = Menus.OnShownInfoType;
 import Tab = Tabs.Tab;
 
 export abstract class Listeners {
-  static lastMenuInstanceId = 0;
-  static nextMenuInstanceId = 1;
+  private static lastMenuInstanceId = 0;
+  private static nextMenuInstanceId = 1;
 
   static closeTabsToLeft(info: Menus.OnClickData, target: Tabs.Tab): Promise<void> {
     return browser.tabs
