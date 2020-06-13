@@ -1,6 +1,7 @@
 import {Listeners} from './listeners';
 import {Menus, Tabs} from 'webextension-polyfill-ts';
 import arrayContaining = jasmine.arrayContaining;
+import {MENU_ITEM_ID} from './util';
 
 describe('Listeners', () => {
   const tabStub: (title: string, id: number, index: number) => Tabs.Tab = (title, id, index) => {
@@ -15,13 +16,13 @@ describe('Listeners', () => {
     };
   };
 
-  describe('closeTabsToLeft', () => {
-    const tab1: Tabs.Tab = tabStub('tab1', 10, 1);
-    const tab2: Tabs.Tab = tabStub('tab2', 20, 2);
-    const tab3: Tabs.Tab = tabStub('tab3', 30, 3);
-    const tab4: Tabs.Tab = tabStub('tab4', 40, 4);
-    const windowTabs: Tabs.Tab[] = [tab1, tab2, tab3, tab4];
+  const tab1: Tabs.Tab = tabStub('tab1', 10, 1);
+  const tab2: Tabs.Tab = tabStub('tab2', 20, 2);
+  const tab3: Tabs.Tab = tabStub('tab3', 30, 3);
+  const tab4: Tabs.Tab = tabStub('tab4', 40, 4);
+  const windowTabs: Tabs.Tab[] = [tab1, tab2, tab3, tab4];
 
+  describe('closeTabsToLeft', () => {
     it('should close tabs to the left', async () => {
       const tabTarget = tab4;
       const tabIdsLeftOfTarget: number[] = [tab1.id!, tab2.id!, tab3.id!];
@@ -50,10 +51,61 @@ describe('Listeners', () => {
     });
   });
 
+  describe('Button enabled listener', () => {
+    let menuUpdateSpy: (id: string | number, updateProperties: Menus.UpdateUpdatePropertiesType) => Promise<void>;
+    let menuRefreshSpy: () => Promise<void>;
+    let tabQuerySpy: (queryInfo: Tabs.QueryQueryInfoType) => Promise<Tabs.Tab[]>;
+
+    beforeEach(() => {
+      menuUpdateSpy = jest.fn(() => Promise.resolve());
+      menuRefreshSpy = jest.fn(() => Promise.resolve());
+      tabQuerySpy = jest.fn(() => Promise.resolve(windowTabs));
+
+      mockBrowser.tabs.query.mock(queryInfo => tabQuerySpy(queryInfo));
+      mockBrowser.menus.update.mock((id, updateProperties) => menuUpdateSpy(id, updateProperties));
+      mockBrowser.menus.refresh.mock(() => menuRefreshSpy());
+    });
+
+    it('should disable button if there are no tabs to the left', async () => {
+      await Listeners.updateEnabledState(dummyOnShownInfoType, tab1);
+
+      expect(tabQuerySpy).toHaveBeenCalledWith({currentWindow: true});
+      expect(menuUpdateSpy).toHaveBeenCalledWith(MENU_ITEM_ID, {enabled: false});
+      expect(menuRefreshSpy).toHaveBeenCalled();
+    });
+
+    it('should enable button if there are tabs to the left', async () => {
+      await Listeners.updateEnabledState(dummyOnShownInfoType, tab2);
+
+      expect(tabQuerySpy).toHaveBeenCalledWith({currentWindow: true});
+      expect(menuUpdateSpy).toHaveBeenCalledWith(MENU_ITEM_ID, {enabled: true});
+      expect(menuRefreshSpy).toHaveBeenCalled();
+    });
+
+    it('should noop if menu is not a tab menu', async () => {
+      await Listeners.updateEnabledState(dummyOnShownInfoType, undefined);
+
+      expect(tabQuerySpy).not.toHaveBeenCalled();
+      expect(menuUpdateSpy).not.toHaveBeenCalled();
+      expect(menuRefreshSpy).not.toHaveBeenCalled();
+    });
+
+    it('should noop if menu instance is reset during async query', async () => {
+      Listeners.updateEnabledState(dummyOnShownInfoType, tab2);
+      await Listeners.resetMenuInstanceState();
+
+      expect(tabQuerySpy).toHaveBeenCalledWith({currentWindow: true});
+      expect(menuUpdateSpy).not.toHaveBeenCalled();
+      expect(menuRefreshSpy).not.toHaveBeenCalled();
+    });
+  });
+
   const dummyOnClickData: Menus.OnClickData = {
     bookmarkId: '',
     editable: false,
     menuItemId: 1,
     modifiers: [],
   };
+
+  const dummyOnShownInfoType = {contexts: [], editable: false, menuIds: []};
 });

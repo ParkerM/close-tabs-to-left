@@ -9,10 +9,6 @@
     "name": "Parker Mauney",
     "url": "https://github.com/ParkerM/close-tabs-to-left"
   },
-  "icons": {
-    "48": "icons/icon.png",
-    "96": "icons/icon@2x.png"
-  },
   "browser_specific_settings": {
     "gecko": {
       "id": "closetabstotheleft@parkerm.github.io",

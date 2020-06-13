@@ -1,10 +1,14 @@
 import {browser, Menus, Tabs} from 'webextension-polyfill-ts';
+import {MENU_ITEM_ID} from './util';
+import {Listeners} from './listeners';
+import Tab = Tabs.Tab;
+import OnClickData = Menus.OnClickData;
 
 export class Lifecycle {
-  init(onclick: (info: Menus.OnClickData, target: Tabs.Tab) => void): number | string {
-    return browser.menus.create(
+  init(onclick: (info: OnClickData, target: Tab) => void): void {
+    browser.menus.create(
       {
-        id: 'tab-close-to-left',
+        id: MENU_ITEM_ID,
         type: 'normal',
         contexts: ['tab'],
         title: 'Close Tabs to the Left',
@@ -15,10 +19,7 @@ export class Lifecycle {
   }
 
   onCreated(): void {
-    if (browser.runtime.lastError) {
-      console.error(`Error: ${browser.runtime.lastError}`);
-    } else {
-      console.debug('Item created successfully');
-    }
+    browser.menus.onShown.addListener(Listeners.updateEnabledState);
+    browser.menus.onHidden.addListener(Listeners.resetMenuInstanceState);
   }
 }
