@@ -1,6 +1,7 @@
 import {Listeners} from './listeners';
 import {Menus, Tabs} from 'webextension-polyfill-ts';
 import arrayContaining = jasmine.arrayContaining;
+import {MENU_ITEM_ID} from './util';
 
 describe('Listeners', () => {
   const tabStub: (title: string, id: number, index: number) => Tabs.Tab = (title, id, index) => {
@@ -63,6 +64,22 @@ describe('Listeners', () => {
       mockBrowser.tabs.query.mock(queryInfo => tabQuerySpy(queryInfo));
       mockBrowser.menus.update.mock((id, updateProperties) => menuUpdateSpy(id, updateProperties));
       mockBrowser.menus.refresh.mock(() => menuRefreshSpy());
+    });
+
+    it('should disable button if there are no tabs to the left', async () => {
+      await Listeners.updateEnabledState(dummyOnShownInfoType, tab1);
+
+      expect(tabQuerySpy).toHaveBeenCalledWith({currentWindow: true});
+      expect(menuUpdateSpy).toHaveBeenCalledWith(MENU_ITEM_ID, {enabled: false});
+      expect(menuRefreshSpy).toHaveBeenCalled();
+    });
+
+    it('should enable button if there are tabs to the left', async () => {
+      await Listeners.updateEnabledState(dummyOnShownInfoType, tab2);
+
+      expect(tabQuerySpy).toHaveBeenCalledWith({currentWindow: true});
+      expect(menuUpdateSpy).toHaveBeenCalledWith(MENU_ITEM_ID, {enabled: true});
+      expect(menuRefreshSpy).toHaveBeenCalled();
     });
 
     it('should noop if menu is not a tab menu', async () => {
