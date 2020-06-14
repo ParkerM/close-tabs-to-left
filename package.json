@@ -13,7 +13,7 @@
     "test:coverage": "jest --coverage",
     "build": "webpack --mode=development",
     "build-release": "webpack --mode=production",
-    "pack": "web-ext build -i src coverage *.json *.lock \"*.js\" \"dist/*.map\" -i !manifest.json",
+    "pack": "web-ext build -i src coverage *.json *.lock README.md \"*.js\" \"dist/*.map\" -i !manifest.json",
     "release": "yarn run build-release && yarn run pack"
   },
   "engines": {
