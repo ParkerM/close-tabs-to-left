@@ -1,0 +1,33 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  release:
+    name: Build Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Create build artifacts
+        run: |
+          yarn run release
+          cd web-ext-artifacts/
+          CHECKSUM_OUT=$(sha256sum *.zip)
+          CHECKSUM_FILE=$(echo $CHECKSUM_OUT | cut -d " " -f 2).sha256.txt
+          echo $CHECKSUM_OUT > $CHECKSUM_FILE
+          cat $CHECKSUM_FILE
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: web-ext-artifacts
+          path: web-ext-artifacts/
