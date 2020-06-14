@@ -3,7 +3,7 @@
   "name": "Close Tabs to the Left",
   "short_name": "Close Left",
   "description": "Adds \"Close Tabs to the Left\" button on tab right-click menus.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage_url": "https://github.com/ParkerM/close-tabs-to-left",
   "developer": {
     "name": "Parker Mauney",
