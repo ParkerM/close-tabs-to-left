@@ -1,0 +1,10 @@
+{
+  "extensionName": {
+    "message": "Cerrar pestañas a la izquierda",
+    "description": "Name of the extension."
+  },
+  "labelCloseTabsToLeft": {
+    "message": "Cerrar pestañas a la izquierda",
+    "description": "Label for menu item in tab right-click menus."
+  }
+}
