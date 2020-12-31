@@ -1,0 +1,14 @@
+{
+  "extensionName": {
+    "message": "Close Tabs to the Left",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Adds \"Close Tabs to the Left\" button on tab right-click menus.",
+    "description": "Description of the extension."
+  },
+  "labelCloseTabsToLeft": {
+    "message": "Close Tabs to the Left",
+    "description": "Label for menu item in tab right-click menus."
+  }
+}
