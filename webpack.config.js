@@ -3,6 +3,7 @@ const path = require('path');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 module.exports = {
+  mode: 'development', // explicitly provide --mode=production for prod builds
   entry: {
     background: './src/background.ts',
   },
