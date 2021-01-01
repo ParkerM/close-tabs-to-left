@@ -26,6 +26,17 @@ yarn build
 yarn start
 ```
 
+### Testing localization
+1. Install the desired language pack from
+[Dictionaries and Language Packs](https://addons.mozilla.org/en-US/firefox/language-tools/).
+1. Create a non-default profile via `about:profiles` and set the preferred language.
+1. Launch via `web-ext run --pref intl.locale.requested=<locale-id> -p "<profile-name>" --keep-profile-changes`
+    * Example configuration using the es-MX language pack and profile named `esmx`:
+      ```
+      web-ext run --pref intl.locale.requested=es-MX -p "esmx" --keep-profile-changes
+      ```
+See `start:dev-es` in [package.json](./package.json) for a working configuration.
+
 ### Build and package release
 Outputs a production-ready build artifact to `./web-ext-artifacts`.
 
