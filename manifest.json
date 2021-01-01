@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Close Tabs to the Left",
-  "short_name": "Close Left",
-  "description": "Adds \"Close Tabs to the Left\" button on tab right-click menus.",
+  "default_locale": "en",
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
   "version": "0.0.2",
   "homepage_url": "https://github.com/ParkerM/close-tabs-to-left",
   "developer": {

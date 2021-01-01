@@ -7,6 +7,7 @@
   "bugs": "https://github.com/ParkerM/close-tabs-to-left/issues",
   "scripts": {
     "start": "web-ext run",
+    "start:dev-es": "web-ext run --firefox=firefoxdeveloperedition --pref intl.locale.requested=es-MX -p \"esmx\" --keep-profile-changes",
     "lint:web-ext": "yarn run build-release && web-ext lint",
     "lint:eslint": "eslint src/**/*.{js,ts}",
     "test": "jest",

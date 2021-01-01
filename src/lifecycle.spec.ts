@@ -11,14 +11,16 @@ describe('Lifecycle', () => {
   describe('init', () => {
     it('should add "Close Tabs to the Left" button to tab menu', () => {
       const onclickFn = jest.fn();
+      const expectedMenuItemLabel = 'Close Tabs to the Left';
       const expectedCreateCb = lifecycle.onCreated;
 
+      mockBrowser.i18n.getMessage.expect('labelCloseTabsToLeft').andReturn(expectedMenuItemLabel);
       mockBrowser.menus.create.expect(
         {
           id: 'tab-close-to-left',
           type: 'normal',
           contexts: ['tab'],
-          title: 'Close Tabs to the Left',
+          title: expectedMenuItemLabel,
           onclick: onclickFn,
         },
         expectedCreateCb,
