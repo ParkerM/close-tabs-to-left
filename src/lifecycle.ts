@@ -11,7 +11,7 @@ export class Lifecycle {
         id: MENU_ITEM_ID,
         type: 'normal',
         contexts: ['tab'],
-        title: 'Close Tabs to the Left',
+        title: browser.i18n.getMessage('labelCloseTabsToLeft'),
         onclick: onclick,
       },
       this.onCreated,

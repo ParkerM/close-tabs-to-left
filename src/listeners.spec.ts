@@ -1,33 +1,45 @@
 import {Listeners} from './listeners';
 import {Menus, Tabs} from 'webextension-polyfill-ts';
-import arrayContaining = jasmine.arrayContaining;
 import {MENU_ITEM_ID} from './util';
 
-describe('Listeners', () => {
-  const tabStub: (title: string, id: number, index: number) => Tabs.Tab = (title, id, index) => {
-    return {
-      title: title,
-      id: id,
-      index: index,
-      highlighted: false,
-      active: false,
-      pinned: false,
-      incognito: false,
-    };
+const tabStub: (title: string, id: number, index: number) => Tabs.Tab = (title, id, index) => {
+  return {
+    title: title,
+    id: id,
+    index: index,
+    highlighted: false,
+    active: false,
+    pinned: false,
+    incognito: false,
   };
+};
 
-  const tab1: Tabs.Tab = tabStub('tab1', 10, 1);
-  const tab2: Tabs.Tab = tabStub('tab2', 20, 2);
-  const tab3: Tabs.Tab = tabStub('tab3', 30, 3);
-  const tab4: Tabs.Tab = tabStub('tab4', 40, 4);
-  const windowTabs: Tabs.Tab[] = [tab1, tab2, tab3, tab4];
+describe('Listeners', () => {
+  const tabQueryFake = (queryInfo: Tabs.QueryQueryInfoType): Promise<Tabs.Tab[]> => {
+    return Promise.resolve(windowTabs.filter(tab => tab.pinned === queryInfo.pinned));
+  };
+  const queryUnpinnedInCurrentWindow: Tabs.QueryQueryInfoType = Object.freeze({currentWindow: true, pinned: false});
+
+  let tab1: Tabs.Tab;
+  let tab2: Tabs.Tab;
+  let tab3: Tabs.Tab;
+  let tab4: Tabs.Tab;
+  let windowTabs: Tabs.Tab[];
+
+  beforeEach(() => {
+    tab1 = tabStub('tab1', 10, 1);
+    tab2 = tabStub('tab2', 20, 2);
+    tab3 = tabStub('tab3', 30, 3);
+    tab4 = tabStub('tab4', 40, 4);
+    windowTabs = [tab1, tab2, tab3, tab4];
+  });
 
   describe('closeTabsToLeft', () => {
     it('should close tabs to the left', async () => {
       const tabTarget = tab4;
       const tabIdsLeftOfTarget: number[] = [tab1.id!, tab2.id!, tab3.id!];
 
-      mockBrowser.tabs.query.expect({currentWindow: true}).andResolve(windowTabs).times(1);
+      mockBrowser.tabs.query.expect(queryUnpinnedInCurrentWindow).andResolve(windowTabs).times(1);
       mockBrowser.tabs.remove.expect(tabIdsLeftOfTarget).andResolve().times(1);
 
       await Listeners.closeTabsToLeft(dummyOnClickData, tabTarget);
@@ -37,15 +49,12 @@ describe('Listeners', () => {
       const tabTarget = tab3;
       const removeSpy: (tabIds: number | number[]) => Promise<void> = jest.fn(() => Promise.resolve());
 
-      mockBrowser.tabs.query.expect({currentWindow: true}).andResolve(windowTabs).times(1);
+      mockBrowser.tabs.query.expect(queryUnpinnedInCurrentWindow).andResolve(windowTabs).times(1);
       mockBrowser.tabs.remove.spy(removeSpy);
 
-      expect.assertions(5);
+      expect.assertions(2);
       return Listeners.closeTabsToLeft(dummyOnClickData, tabTarget).then(() => {
-        expect(removeSpy).toHaveBeenCalledWith(arrayContaining([tab1.id!]));
-        expect(removeSpy).toHaveBeenCalledWith(arrayContaining([tab2.id!]));
-        expect(removeSpy).not.toHaveBeenCalledWith(arrayContaining([tab3.id!]));
-        expect(removeSpy).not.toHaveBeenCalledWith(arrayContaining([tab4.id!]));
+        expect(removeSpy).toHaveBeenCalledWith([tab1.id!, tab2.id!]);
         expect(removeSpy).toHaveBeenCalledTimes(1);
       });
     });
@@ -54,49 +63,70 @@ describe('Listeners', () => {
   describe('Button enabled listener', () => {
     let menuUpdateSpy: (id: string | number, updateProperties: Menus.UpdateUpdatePropertiesType) => Promise<void>;
     let menuRefreshSpy: () => Promise<void>;
-    let tabQuerySpy: (queryInfo: Tabs.QueryQueryInfoType) => Promise<Tabs.Tab[]>;
 
     beforeEach(() => {
       menuUpdateSpy = jest.fn(() => Promise.resolve());
       menuRefreshSpy = jest.fn(() => Promise.resolve());
-      tabQuerySpy = jest.fn(() => Promise.resolve(windowTabs));
 
-      mockBrowser.tabs.query.mock(queryInfo => tabQuerySpy(queryInfo));
+      mockBrowser.tabs.query.mock(tabQueryFake);
       mockBrowser.menus.update.mock((id, updateProperties) => menuUpdateSpy(id, updateProperties));
       mockBrowser.menus.refresh.mock(() => menuRefreshSpy());
     });
 
-    it('should disable button if there are no tabs to the left', async () => {
-      await Listeners.updateEnabledState(dummyOnShownInfoType, tab1);
+    describe('should disable button', () => {
+      afterEach(() => {
+        expect(menuUpdateSpy).toHaveBeenCalledWith(MENU_ITEM_ID, {enabled: false});
+        expect(menuRefreshSpy).toHaveBeenCalled();
+      });
 
-      expect(tabQuerySpy).toHaveBeenCalledWith({currentWindow: true});
-      expect(menuUpdateSpy).toHaveBeenCalledWith(MENU_ITEM_ID, {enabled: false});
-      expect(menuRefreshSpy).toHaveBeenCalled();
+      it('when there are no tabs to the left', async () => {
+        return Listeners.updateEnabledState(dummyOnShownInfoType, tab1);
+      });
+
+      it('when all tabs to the left are pinned', async () => {
+        [tab1.pinned, tab2.pinned, tab3.pinned] = [true, true, true];
+
+        return Listeners.updateEnabledState(dummyOnShownInfoType, tab4);
+      });
+
+      it('when target tab is pinned', async () => {
+        tab4.pinned = true;
+
+        return Listeners.updateEnabledState(dummyOnShownInfoType, tab4);
+      });
     });
 
-    it('should enable button if there are tabs to the left', async () => {
-      await Listeners.updateEnabledState(dummyOnShownInfoType, tab2);
+    describe('should enable button', () => {
+      afterEach(() => {
+        expect(menuUpdateSpy).toHaveBeenCalledWith(MENU_ITEM_ID, {enabled: true});
+        expect(menuRefreshSpy).toHaveBeenCalled();
+      });
 
-      expect(tabQuerySpy).toHaveBeenCalledWith({currentWindow: true});
-      expect(menuUpdateSpy).toHaveBeenCalledWith(MENU_ITEM_ID, {enabled: true});
-      expect(menuRefreshSpy).toHaveBeenCalled();
+      it('when there are tabs to the left', async () => {
+        return Listeners.updateEnabledState(dummyOnShownInfoType, tab2);
+      });
+
+      it('when there are unpinned tabs to the left', async () => {
+        [tab1.pinned, tab2.pinned, tab3.pinned] = [true, false, false];
+
+        return Listeners.updateEnabledState(dummyOnShownInfoType, tab4);
+      });
     });
 
-    it('should noop if menu is not a tab menu', async () => {
-      await Listeners.updateEnabledState(dummyOnShownInfoType, undefined);
+    describe('should noop', () => {
+      afterEach(() => {
+        expect(menuUpdateSpy).not.toHaveBeenCalled();
+        expect(menuRefreshSpy).not.toHaveBeenCalled();
+      });
 
-      expect(tabQuerySpy).not.toHaveBeenCalled();
-      expect(menuUpdateSpy).not.toHaveBeenCalled();
-      expect(menuRefreshSpy).not.toHaveBeenCalled();
-    });
+      it('when menu is not a tab menu', async () => {
+        return Listeners.updateEnabledState(dummyOnShownInfoType, undefined);
+      });
 
-    it('should noop if menu instance is reset during async query', async () => {
-      Listeners.updateEnabledState(dummyOnShownInfoType, tab2);
-      await Listeners.resetMenuInstanceState();
-
-      expect(tabQuerySpy).toHaveBeenCalledWith({currentWindow: true});
-      expect(menuUpdateSpy).not.toHaveBeenCalled();
-      expect(menuRefreshSpy).not.toHaveBeenCalled();
+      it('when menu instance is reset during async query', async () => {
+        Listeners.updateEnabledState(dummyOnShownInfoType, tab2);
+        return Listeners.resetMenuInstanceState();
+      });
     });
   });
 

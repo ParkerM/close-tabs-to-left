@@ -3,6 +3,7 @@ const path = require('path');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 module.exports = {
+  mode: 'development', // explicitly provide --mode=production for prod builds
   entry: {
     background: './src/background.ts',
   },
@@ -20,8 +21,8 @@ module.exports = {
   },
   module: {
     rules: [
-      // All files with a ".ts" extension will be handled by "awesome-typescript-loader".
-      {test: /\.ts$/, loader: 'awesome-typescript-loader'},
+      // All files with a ".ts" extension will be handled by "ts-loader".
+      {test: /\.ts$/, loader: 'ts-loader'},
 
       // All output ".js" files will have any sourcemaps re-processed by "source-map-loader".
       {enforce: 'pre', test: /\.js$/, loader: 'source-map-loader'},
