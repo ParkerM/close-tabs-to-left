@@ -9,7 +9,7 @@ export abstract class Listeners {
 
   static closeTabsToLeft(info: Menus.OnClickData, target: Tabs.Tab): Promise<void> {
     return browser.tabs
-      .query({currentWindow: true})
+      .query({currentWindow: true, pinned: false})
       .then(tabs => tabs.filter(tab => tab.index < target.index).map(toId))
       .then(browser.tabs.remove);
   }
@@ -28,23 +28,29 @@ export abstract class Listeners {
     const menuInstanceId = Listeners.nextMenuInstanceId++;
     Listeners.lastMenuInstanceId = menuInstanceId;
 
-    const leftmostTabInCurrentWindow: Tab = await browser.tabs
-      .query({currentWindow: true})
-      .then(windowTabs => windowTabs.reduce(minimizingIndex));
+    const leftmostTabInCurrentWindow: Tabs.Tab | null = await browser.tabs
+      .query({currentWindow: true, pinned: false})
+      .then(windowTabs => (windowTabs.length ? windowTabs.reduce(minimizingIndex) : null));
 
     // Verify that menu was not closed and shown again during async operation
     if (menuInstanceId !== Listeners.lastMenuInstanceId) return;
 
-    // noinspection ES6MissingAwait
-    browser.menus.update(MENU_ITEM_ID, {
-      enabled: leftmostTabInCurrentWindow.index !== targetTab.index,
-    });
-    // noinspection ES6MissingAwait
-    browser.menus.refresh();
+    // If targetTab is pinned, then there can only be pinned tabs to the left
+    if (targetTab.pinned) {
+      return Listeners.updateMenuItem({enabled: false});
+    }
+    return Listeners.updateMenuItem({enabled: leftmostTabInCurrentWindow?.index !== targetTab.index});
   };
 
   /**
    * Reset the menu open/closed state used by the onShown handler.
    */
   static resetMenuInstanceState: () => void = () => (Listeners.lastMenuInstanceId = 0);
+
+  /**
+   * Update the menu item with the provided properties, then refresh the extension items in the shown menu.
+   */
+  private static updateMenuItem = async (updateProperties: Menus.UpdateUpdatePropertiesType): Promise<void> => {
+    return browser.menus.update(MENU_ITEM_ID, updateProperties).then(() => browser.menus.refresh());
+  };
 }
