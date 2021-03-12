@@ -9,8 +9,8 @@ Firefox extension that adds "Close Tabs to the Left" context menu entry.
 See [package.json](./package.json) for more info on the yarn scripts mentioned here.
 
 ### Requirements
-- Node.js 12+
-- yarn 1.2+
+- Node.js 14+
+- yarn 1.22+
 
 ### Install
 ```bash
