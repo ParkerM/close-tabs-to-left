@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'development', // explicitly provide --mode=production for prod builds
@@ -10,8 +9,8 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: __dirname + '/dist',
+    clean: true,
   },
-  plugins: [new CleanWebpackPlugin()],
   devtool: 'source-map',
   resolve: {
     extensions: ['.ts', '.js', '.json'],
