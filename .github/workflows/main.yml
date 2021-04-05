@@ -33,3 +33,10 @@ jobs:
 
       - name: Jest tests
         run: yarn run test:coverage
+
+      - name: Publish coverage report
+        if: ${{ github.ref == 'refs/heads/develop' }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./coverage/lcov-report
