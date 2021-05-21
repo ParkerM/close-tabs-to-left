@@ -43,7 +43,9 @@ jobs:
 
   report:
     if: ${{ github.ref == 'refs/heads/develop' }}
+    needs: test
     runs-on: ubuntu-20.04
+
     steps:
       - name: Download coverage report
         uses: actions/download-artifact@v2
