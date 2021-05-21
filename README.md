@@ -6,6 +6,10 @@
 
 Firefox extension that adds "Close Tabs to the Left" context menu entry.
 
+# ⚠ Notice:
+As a result of "Close Tabs to the Left" becoming standard functionality in Firefox version 88,
+this extension will be restricted to Firefox versions 87 and below.
+
 ## Building
 See [package.json](./package.json) for more info on the yarn scripts mentioned here.
 
