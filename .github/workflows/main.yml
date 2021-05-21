@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: coverage-report
-          path: coverage/lcov-report
+          path: coverage
 
   report:
     if: ${{ github.ref == 'refs/heads/develop' }}
@@ -51,7 +51,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: coverage-report
-          path: coverage/lcov-report
+          path: coverage
 
       - name: Generate coverage badge
         run: npx make-coverage-badge --output-path ./coverage/lcov-report/badge.svg
