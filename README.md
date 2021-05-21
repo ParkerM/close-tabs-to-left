@@ -1,6 +1,7 @@
 # close-tabs-to-left
 <p align="left">
   <a href="https://github.com/ParkerM/close-tabs-to-left/actions"><img alt="CI status" src="https://github.com/ParkerM/close-tabs-to-left/workflows/CI/badge.svg"></a>
+  <a href="https://parkerm.github.io/close-tabs-to-left/coverage"><img alt="Coverage report" src="https://parkerm.github.io/close-tabs-to-left/coverage/badge.svg"></a>
 </p>
 
 Firefox extension that adds "Close Tabs to the Left" context menu entry.
@@ -9,8 +10,8 @@ Firefox extension that adds "Close Tabs to the Left" context menu entry.
 See [package.json](./package.json) for more info on the yarn scripts mentioned here.
 
 ### Requirements
-- Node.js 12+
-- yarn 1.2+
+- Node.js 14
+- yarn 1.22+
 
 ### Install
 ```bash
@@ -36,6 +37,18 @@ yarn start
       web-ext run --pref intl.locale.requested=es-MX -p "esmx" --keep-profile-changes
       ```
 See `start:dev-es` in [package.json](./package.json) for a working configuration.
+
+### Generate changelog
+Generates and commits a changelog and version bumps based on conventional commit rules.
+
+```bash
+yarn run stage
+```
+
+The following scripts are also provided to override automatic semver detection:
+ * `yarn run stage:patch`
+ * `yarn run stage:minor`
+ * `yarn run stage:major`
 
 ### Build and package release
 Outputs a production-ready build artifact to `./web-ext-artifacts`.
