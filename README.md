@@ -38,6 +38,18 @@ yarn start
       ```
 See `start:dev-es` in [package.json](./package.json) for a working configuration.
 
+### Generate changelog
+Generates and commits a changelog and version bumps based on conventional commit rules.
+
+```bash
+yarn run stage
+```
+
+The following scripts are also provided to override automatic semver detection:
+ * `yarn run stage:patch`
+ * `yarn run stage:minor`
+ * `yarn run stage:major`
+
 ### Build and package release
 Outputs a production-ready build artifact to `./web-ext-artifacts`.
 
