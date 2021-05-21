@@ -1,6 +1,6 @@
 {
   "name": "close-tabs-to-left",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "license": "MIT",
   "repository": "github:ParkerM/close-tabs-to-left",
@@ -14,6 +14,10 @@
     "test:coverage": "jest --coverage",
     "build": "webpack --mode=development",
     "build-release": "webpack --mode=production",
+    "stage": "npx standard-version --skip.tag",
+    "stage:patch": "yarn run stage --release-as patch",
+    "stage:minor": "yarn run stage --release-as minor",
+    "stage:major": "yarn run stage --release-as major",
     "pack": "web-ext build",
     "release": "yarn run build-release && yarn run pack",
     "prepare": "husky install"
