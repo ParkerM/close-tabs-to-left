@@ -33,3 +33,30 @@ jobs:
 
       - name: Jest tests
         run: yarn run test:coverage
+
+      - name: Upload coverage artifacts
+        if: ${{ github.ref == 'refs/heads/develop' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage/lcov-report
+
+  report:
+    if: ${{ github.ref == 'refs/heads/develop' }}
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Download coverage report
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage/lcov-report
+
+      - name: Generate coverage badge
+        run: npx make-coverage-badge --output-path ./coverage/lcov-report/badge.svg
+
+      - name: Publish coverage report
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./coverage/lcov-report
+          destintion_dir: coverage
