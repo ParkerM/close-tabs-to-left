@@ -36,6 +36,16 @@ describe('Listeners', () => {
 
   describe('closeTabsToLeft', () => {
     it('should close tabs to the left', async () => {
+      const tabTarget = tab2;
+      const tabIdsLeftOfTarget: number[] = [tab1.id!];
+
+      mockBrowser.tabs.query.expect(queryUnpinnedInCurrentWindow).andResolve(windowTabs).times(1);
+      mockBrowser.tabs.remove.expect(tabIdsLeftOfTarget).andResolve().times(1);
+
+      await Listeners.closeTabsToLeft(dummyOnClickData, tabTarget);
+    });
+
+    it('should close all tabs to the left', async () => {
       const tabTarget = tab4;
       const tabIdsLeftOfTarget: number[] = [tab1.id!, tab2.id!, tab3.id!];
 
@@ -45,7 +55,7 @@ describe('Listeners', () => {
       await Listeners.closeTabsToLeft(dummyOnClickData, tabTarget);
     });
 
-    it('should only close tabs to the left', () => {
+    it('should close nothing but tabs to the left', () => {
       const tabTarget = tab3;
       const removeSpy: (tabIds: number | number[]) => Promise<void> = jest.fn(() => Promise.resolve());
 
