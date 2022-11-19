@@ -8,12 +8,12 @@ on:
 jobs:
   release:
     name: Build Release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: 18.x
       - name: Install dependencies
         run: yarn --frozen-lockfile
 
@@ -27,7 +27,7 @@ jobs:
           cat $CHECKSUM_FILE
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: web-ext-artifacts
           path: web-ext-artifacts/
