@@ -1,5 +1,5 @@
 import {Listeners} from './listeners';
-import {Menus, Tabs} from 'webextension-polyfill-ts';
+import {Menus, Tabs} from 'webextension-polyfill';
 import {MENU_ITEM_ID} from './util';
 
 const tabStub: (title: string, id: number, index: number) => Tabs.Tab = (title, id, index) => {

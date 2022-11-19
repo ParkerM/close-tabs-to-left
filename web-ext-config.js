@@ -9,6 +9,9 @@ const webExtConfig = {
   build: {
     overwriteDest: true,
   },
+  run: {
+    firefox: 'firefoxdeveloperedition',
+  },
 };
 
 module.exports = webExtConfig;

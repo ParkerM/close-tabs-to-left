@@ -1,4 +1,4 @@
-import {Tabs} from 'webextension-polyfill-ts';
+import {Tabs} from 'webextension-polyfill';
 
 export const MENU_ITEM_ID = 'tab-close-to-left';
 

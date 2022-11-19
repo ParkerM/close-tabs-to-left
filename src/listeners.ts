@@ -1,4 +1,4 @@
-import {browser, Menus, Tabs} from 'webextension-polyfill-ts';
+import browser, {Menus, Tabs} from 'webextension-polyfill';
 import {MENU_ITEM_ID, minimizingIndex, toId} from './util';
 import OnShownInfoType = Menus.OnShownInfoType;
 import Tab = Tabs.Tab;

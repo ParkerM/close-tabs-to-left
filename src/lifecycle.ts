@@ -1,4 +1,4 @@
-import {browser, Menus, Tabs} from 'webextension-polyfill-ts';
+import browser, {Menus, Tabs} from 'webextension-polyfill';
 import {MENU_ITEM_ID} from './util';
 import {Listeners} from './listeners';
 import Tab = Tabs.Tab;
